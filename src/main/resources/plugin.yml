@@ -8,4 +8,9 @@ api-version: 1.18
 commands:
   ledger:
     description: Generates a URL to view the site
-    usage: /ledger
+    usage: /ledger [reload]
+
+permissions:
+  ledger.reload:
+    description: Allows reloading the Ledger configuration
+    default: op

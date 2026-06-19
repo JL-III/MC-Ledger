@@ -1,0 +1,60 @@
+package com.ledger.utils;
+
+import com.ledger.config.ConfigManager;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Wraps the plugin's {@link Logger} and layers a debug policy on top of it.
+ * {@link #debug} messages are only printed when {@code debug: true} is set in
+ * config.yml; {@link #info}, {@link #warning} and {@link #error} are always
+ * printed. This keeps the console quiet during normal operation without
+ * scattering debug-flag checks across the codebase.
+ */
+public class CustomLogger {
+    private final Logger logger;
+    private final ConfigManager configManager;
+
+    public CustomLogger(Logger logger, ConfigManager configManager) {
+        this.logger = logger;
+        this.configManager = configManager;
+    }
+
+    /**
+     * Logs a verbose diagnostic message. Only printed when debug mode is enabled.
+     */
+    public void debug(String message) {
+        if (configManager.isDebug()) {
+            logger.info(message);
+        }
+    }
+
+    /**
+     * Logs an informational message. Always printed.
+     */
+    public void info(String message) {
+        logger.info(message);
+    }
+
+    /**
+     * Logs a warning. Always printed.
+     */
+    public void warning(String message) {
+        logger.warning(message);
+    }
+
+    /**
+     * Logs an error. Always printed.
+     */
+    public void error(String message) {
+        logger.severe(message);
+    }
+
+    /**
+     * Logs an error along with the throwable that caused it. Always printed.
+     */
+    public void error(String message, Throwable throwable) {
+        logger.log(Level.SEVERE, message, throwable);
+    }
+}

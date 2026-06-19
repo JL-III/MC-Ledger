@@ -2,6 +2,7 @@ package com.ledger.api.database.repositories;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.entities.HistoryType;
 import com.ledger.api.database.entities.PlayerBalance;
@@ -24,7 +25,7 @@ public class ServerBalanceRepository {
         try {
             dao.create(serverBalance);
         } catch (Exception e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create server balance.", e);
         }
     }
 
@@ -32,7 +33,7 @@ public class ServerBalanceRepository {
         try {
             dao.createOrUpdate(sb);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create or update server balance.", e);
         }
     }
 
@@ -40,7 +41,7 @@ public class ServerBalanceRepository {
         try {
             dao.create(serverBalances);
         } catch (Exception e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create server balances.", e);
         }
     }
 
@@ -61,7 +62,7 @@ public class ServerBalanceRepository {
             qb.orderBy("timestamp", true);
             return qb.query();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query server balances.", e);
             return new ArrayList<>();
         }
     }
@@ -74,7 +75,7 @@ public class ServerBalanceRepository {
 
             return qb.queryForFirst();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query server balance.", e);
             return null;
         }
     }
@@ -96,7 +97,7 @@ public class ServerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge daily server balances.", e);
         }
     }
 
@@ -111,7 +112,7 @@ public class ServerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge weekly server balances.", e);
         }
     }
 
@@ -126,7 +127,7 @@ public class ServerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge monthly server balances.", e);
         }
     }
 }

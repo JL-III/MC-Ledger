@@ -5,6 +5,7 @@ import com.ledger.api.database.repositories.PlayerBalanceRepository;
 import com.ledger.api.database.repositories.ServerBalanceRepository;
 import com.ledger.api.database.repositories.TransactionRepository;
 import com.ledger.api.services.SessionService;
+import com.ledger.config.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
@@ -19,12 +20,14 @@ public class DataPurger {
     private final PlayerBalanceRepository playerBalanceRepository;
     private final ServerBalanceRepository serverBalanceRepository;
     private final TransactionRepository transactionRepository;
+    private final ConfigManager configManager;
 
-    public DataPurger(Plugin plugin, PlayerBalanceRepository playerBalanceRepository, ServerBalanceRepository serverBalanceRepository, TransactionRepository transactionRepository) {
+    public DataPurger(Plugin plugin, PlayerBalanceRepository playerBalanceRepository, ServerBalanceRepository serverBalanceRepository, TransactionRepository transactionRepository, ConfigManager configManager) {
         this.plugin = plugin;
         this.playerBalanceRepository = playerBalanceRepository;
         this.serverBalanceRepository = serverBalanceRepository;
         this.transactionRepository = transactionRepository;
+        this.configManager = configManager;
     }
 
     public void startScheduler() {
@@ -42,15 +45,15 @@ public class DataPurger {
     }
 
     public void run() {
-        Ledger.getBukkitLogger().info("Ledger data purger scheduler started...");
+        Ledger.getCustomLogger().debug("Ledger data purger scheduler started...");
 //        playerBalanceRepository.purge();
 //        serverBalanceRepository.purge();
 //
-//        int transactionLogRetention = Ledger.getConfiguration().getInt("transaction-log-retention-days");
+//        int transactionLogRetention = configManager.getTransactionLogRetentionDays();
 //        transactionRepository.purgeBefore(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(transactionLogRetention));
 
         SessionService.purgeOldSessions();
         SessionService.purgeOldAuthorizations();
-        Ledger.getBukkitLogger().info("Ledger data purger ran successfully.");
+        Ledger.getCustomLogger().debug("Ledger data purger ran successfully.");
     }
 }

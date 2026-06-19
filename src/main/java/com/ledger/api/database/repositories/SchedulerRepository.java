@@ -1,6 +1,7 @@
 package com.ledger.api.database.repositories;
 
 import com.j256.ormlite.dao.Dao;
+import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.entities.HistoryType;
 import com.ledger.api.database.entities.Scheduler;
@@ -20,7 +21,7 @@ public class SchedulerRepository {
             if (scheduler == null) return 0L;
             return scheduler.getLastRun();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query last scheduler run.", e);
             return 0L;
         }
     }
@@ -32,7 +33,7 @@ public class SchedulerRepository {
         try {
             dao.createOrUpdate(scheduler);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to update last scheduler run.", e);
         }
     }
 }

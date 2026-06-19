@@ -1,6 +1,7 @@
 package com.ledger.api.database.repositories;
 
 import com.j256.ormlite.stmt.*;
+import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.entities.Transaction;
 import com.ledger.api.dtos.TransactionsResponse;
@@ -22,7 +23,7 @@ public class TransactionRepository {
         try {
             dao.create(log);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create transaction.", e);
         }
     }
 
@@ -30,7 +31,7 @@ public class TransactionRepository {
         try {
             dao.create(logs);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create transactions.", e);
         }
     }
 
@@ -46,7 +47,7 @@ public class TransactionRepository {
 
             return result;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query players with changed balances.", e);
             return new HashSet<>();
         }
     }
@@ -60,7 +61,7 @@ public class TransactionRepository {
 
             return qb.queryForFirst();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query last transaction.", e);
             return null;
         }
     }
@@ -76,7 +77,7 @@ public class TransactionRepository {
             if (t == null) return 0.00;
             return t.getBalance();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query first transaction balance.", e);
             return 0.00;
         }
     }
@@ -92,7 +93,7 @@ public class TransactionRepository {
             if (t == null) return 0.00;
             return t.getBalance();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query transaction balance.", e);
             return 0.00;
         }
     }
@@ -127,7 +128,7 @@ public class TransactionRepository {
             List<Transaction> transactionLogs = qb.query();
             response.setTransactions(transactionLogs);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query transactions.", e);
         }
 
         return response;
@@ -140,7 +141,7 @@ public class TransactionRepository {
             List<Transaction> histories = qb.query();
             dao.delete(histories);
         } catch (Exception e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge old transactions.", e);
         }
     }
 }

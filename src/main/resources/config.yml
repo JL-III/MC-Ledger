@@ -1,6 +1,11 @@
 # Please don't change the version manually.
 version: 1
 
+# Enable verbose logging. When false, only warnings and errors are
+# printed to the console. Set to true to see detailed scheduler and
+# diagnostic messages.
+debug: false
+
 # Can be the IP address of the server,
 # or a domain if you have one
 # Could be: example.com:7241, ledger.example.com:7241, ledger.example.com
