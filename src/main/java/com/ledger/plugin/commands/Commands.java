@@ -3,6 +3,7 @@ package com.ledger.plugin.commands;
 import com.ledger.Ledger;
 import com.ledger.api.database.repositories.PlayerRepository;
 import com.ledger.api.services.SessionService;
+import com.ledger.config.ConfigManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -23,10 +24,12 @@ import java.util.List;
 public class Commands implements CommandExecutor {
     private final Plugin plugin;
     private final PlayerRepository playerRepository;
+    private final ConfigManager configManager;
 
-    public Commands(Plugin plugin, PlayerRepository playerRepository) {
+    public Commands(Plugin plugin, PlayerRepository playerRepository, ConfigManager configManager) {
         this.plugin = plugin;
         this.playerRepository = playerRepository;
+        this.configManager = configManager;
     }
 
     private static final ArrayList<String> PERMISSIONS = new ArrayList<>() {
@@ -42,6 +45,16 @@ public class Commands implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("ledger.reload")) {
+                sender.sendMessage(ChatColor.RED + "No permission.");
+                return true;
+            }
+            configManager.reloadConfig();
+            sender.sendMessage(ChatColor.GREEN + "[Ledger]: Configuration reloaded.");
+            return true;
+        }
+
         if (!(sender instanceof Player player)) {
             // Command sent from console
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -57,7 +70,7 @@ public class Commands implements CommandExecutor {
                 }
 
                 String authId = SessionService.createAuthorization(nessId, "NessXXIII", PERMISSIONS);
-                String host = Ledger.getConfiguration().getString("server-url");
+                String host = configManager.getServerUrl();
                 String url = "http://" + host + "/sessions/" + authId;
                 Ledger.getCustomLogger().info("[Ledger Login URL]: " + url);
             });
@@ -76,7 +89,7 @@ public class Commands implements CommandExecutor {
             return true;
         }
 
-        String host = Ledger.getConfiguration().getString("server-url");
+        String host = configManager.getServerUrl();
         String authId = SessionService.createAuthorization(player.getUniqueId().toString(), player.getName(), permissions);
         String url = "http://" + host + "/sessions/" + authId;
 

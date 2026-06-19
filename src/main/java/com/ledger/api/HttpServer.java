@@ -1,12 +1,12 @@
 package com.ledger.api;
 
-import com.ledger.Ledger;
 import com.ledger.api.database.repositories.PlayerBalanceRepository;
 import com.ledger.api.database.repositories.PlayerRepository;
 import com.ledger.api.database.repositories.ServerBalanceRepository;
 import com.ledger.api.database.repositories.TransactionRepository;
 import com.ledger.api.routes.*;
 import com.ledger.api.utils.ResourceRetriever;
+import com.ledger.config.ConfigManager;
 import java.io.IOException;
 import java.net.*;
 import java.util.concurrent.Executors;
@@ -17,16 +17,17 @@ import java.util.concurrent.Executors;
  */
 public class HttpServer {
     private final com.sun.net.httpserver.HttpServer server;
+    private final ConfigManager configManager;
     private final PlayerRepository playerRepository;
     private final PlayerBalanceRepository playerBalanceRepository;
     private final ServerBalanceRepository serverBalanceRepository;
     private final TransactionRepository transactionRepository;
 
-    public HttpServer(PlayerRepository playerRepository, PlayerBalanceRepository playerBalanceRepository,
+    public HttpServer(ConfigManager configManager, PlayerRepository playerRepository, PlayerBalanceRepository playerBalanceRepository,
                       ServerBalanceRepository serverBalanceRepository, TransactionRepository transactionRepository)
             throws IOException {
-        int port = Ledger.getConfiguration().getInt("port");
-        this.server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(port), 0);
+        this.configManager = configManager;
+        this.server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(configManager.getPort()), 0);
 
         this.playerRepository = playerRepository;
         this.playerBalanceRepository = playerBalanceRepository;
@@ -53,8 +54,8 @@ public class HttpServer {
      * html, css, javascript, and assets
      */
     private void createFrontEndRoutes() throws IOException, URISyntaxException {
-        String host = Ledger.getConfiguration().getString("server-url");
-        String schema = Ledger.getConfiguration().getString("schema");
+        String host = configManager.getServerUrl();
+        String schema = configManager.getSchema();
         String url = schema + "://" + host + "/api";
 
         for (String path : ResourceRetriever.getResourcePaths("frontend")) {

@@ -1,6 +1,6 @@
 package com.ledger.utils;
 
-import com.ledger.Ledger;
+import com.ledger.config.ConfigManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,28 +14,18 @@ import java.util.logging.Logger;
  */
 public class CustomLogger {
     private final Logger logger;
+    private final ConfigManager configManager;
 
-    public CustomLogger(Logger logger) {
+    public CustomLogger(Logger logger, ConfigManager configManager) {
         this.logger = logger;
-    }
-
-    /**
-     * @return whether verbose logging is enabled via the {@code debug} flag in
-     * config.yml. Defaults to {@code false} if the configuration is unavailable.
-     */
-    private boolean isDebugEnabled() {
-        try {
-            return Ledger.getConfiguration().getBoolean("debug", false);
-        } catch (Exception e) {
-            return false;
-        }
+        this.configManager = configManager;
     }
 
     /**
      * Logs a verbose diagnostic message. Only printed when debug mode is enabled.
      */
     public void debug(String message) {
-        if (isDebugEnabled()) {
+        if (configManager.isDebug()) {
             logger.info(message);
         }
     }

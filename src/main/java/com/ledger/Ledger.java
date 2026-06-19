@@ -3,6 +3,7 @@ package com.ledger;
 import com.ledger.api.HttpServer;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.repositories.*;
+import com.ledger.config.ConfigManager;
 import com.ledger.plugin.commands.Commands;
 import com.ledger.plugin.listeners.EconomyListener;
 import com.ledger.plugin.schedulers.DataPurger;
@@ -10,29 +11,20 @@ import com.ledger.plugin.schedulers.PlayerBalanceUpdater;
 import com.ledger.plugin.schedulers.ServerBalanceUpdater;
 import com.ledger.utils.CustomLogger;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import java.io.File;
 
 public class Ledger extends JavaPlugin {
-    private static File dataFolder;
     private static CustomLogger customLogger;
-    private static FileConfiguration config;
+    private static ConfigManager configManager;
 
     private HttpServer server = null;
 
-    public Ledger() {
-        customLogger = new CustomLogger(getLogger());
-        config = getConfig();
-        dataFolder = getDataFolder();
-    }
-
     @Override
     public void onEnable() {
-        this.getConfig().options().copyDefaults();
         saveDefaultConfig();
+        configManager = new ConfigManager(this);
+        customLogger = new CustomLogger(getLogger(), configManager);
 
         // Database and repository initialization
         LedgerDB database;
@@ -42,7 +34,7 @@ public class Ledger extends JavaPlugin {
         ServerBalanceRepository serverBalanceRepository;
         SchedulerRepository schedulerRepository;
         try {
-            database = new LedgerDB(dataFolder);
+            database = new LedgerDB(getDataFolder());
             transactionRepository = new TransactionRepository(database);
             playerRepository = new PlayerRepository(database);
             playerBalanceRepository = new PlayerBalanceRepository(database);
@@ -63,12 +55,12 @@ public class Ledger extends JavaPlugin {
         // Scheduler initialization
         new ServerBalanceUpdater(this, playerRepository, serverBalanceRepository, schedulerRepository).startScheduler();
         new PlayerBalanceUpdater(this, playerBalanceRepository, schedulerRepository, transactionRepository).startScheduler();
-        new DataPurger(this, playerBalanceRepository, serverBalanceRepository, transactionRepository).startScheduler();
+        new DataPurger(this, playerBalanceRepository, serverBalanceRepository, transactionRepository, configManager).startScheduler();
 
         // HTTP Server initialization
         try {
             if (server == null) {
-                server = new HttpServer(playerRepository, playerBalanceRepository, serverBalanceRepository, transactionRepository);
+                server = new HttpServer(configManager, playerRepository, playerBalanceRepository, serverBalanceRepository, transactionRepository);
             }
             server.start();
         } catch (Exception e) {
@@ -77,7 +69,7 @@ public class Ledger extends JavaPlugin {
         }
 
         // Command initialization
-        getCommand("ledger").setExecutor(new Commands(this, playerRepository));
+        getCommand("ledger").setExecutor(new Commands(this, playerRepository, configManager));
     }
 
     @Override
@@ -89,11 +81,11 @@ public class Ledger extends JavaPlugin {
         getServer().getScheduler().cancelTasks(this);
     }
 
-    public static Configuration getConfiguration() {
-        return config;
-    }
-
     public static CustomLogger getCustomLogger() {
         return customLogger;
+    }
+
+    public static ConfigManager getConfigManager() {
+        return configManager;
     }
 }
