@@ -8,6 +8,7 @@ import com.ledger.plugin.listeners.EconomyListener;
 import com.ledger.plugin.schedulers.DataPurger;
 import com.ledger.plugin.schedulers.PlayerBalanceUpdater;
 import com.ledger.plugin.schedulers.ServerBalanceUpdater;
+import com.ledger.utils.CustomLogger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,12 +20,14 @@ import java.util.logging.Logger;
 public class Ledger extends JavaPlugin {
     private static File dataFolder;
     private static Logger logger;
+    private static CustomLogger customLogger;
     private static FileConfiguration config;
 
     private HttpServer server = null;
 
     public Ledger() {
         logger = getLogger();
+        customLogger = new CustomLogger(logger);
         config = getConfig();
         dataFolder = getDataFolder();
     }
@@ -49,7 +52,7 @@ public class Ledger extends JavaPlugin {
             serverBalanceRepository = new ServerBalanceRepository(database);
             schedulerRepository = new SchedulerRepository(database);
         } catch (Exception e) {
-            e.printStackTrace();
+            customLogger.error("Failed to initialize the Ledger database.", e);
             return;
         }
 
@@ -72,7 +75,7 @@ public class Ledger extends JavaPlugin {
             }
             server.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            customLogger.error("Failed to start the Ledger HTTP server.", e);
             return;
         }
 
@@ -95,5 +98,9 @@ public class Ledger extends JavaPlugin {
 
     public static Logger getBukkitLogger() {
         return logger;
+    }
+
+    public static CustomLogger getCustomLogger() {
+        return customLogger;
     }
 }

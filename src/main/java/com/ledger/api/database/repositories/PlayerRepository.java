@@ -1,5 +1,6 @@
 package com.ledger.api.database.repositories;
 
+import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.entities.Player;
 import com.ledger.api.dtos.PlayersResponse;
@@ -22,7 +23,7 @@ public class PlayerRepository {
         try {
             dao.create(players);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create players.", e);
         }
     }
 
@@ -30,7 +31,7 @@ public class PlayerRepository {
         try {
             dao.createOrUpdate(player);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create or update player.", e);
         }
     }
 
@@ -38,7 +39,7 @@ public class PlayerRepository {
         try {
             dao.update(player);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to update player.", e);
         }
     }
 
@@ -48,7 +49,7 @@ public class PlayerRepository {
             if (p == null) return 0.00;
             return p.getBalance();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query current player balance.", e);
             return 0.00;
         }
     }
@@ -61,7 +62,7 @@ public class PlayerRepository {
             if (pb == null) return null;
             return pb.getPlayerId();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query player UUID.", e);
             return null;
         }
     }
@@ -81,7 +82,7 @@ public class PlayerRepository {
             response.setBalances(qb.query());
             return response;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query players.", e);
             return null;
         }
     }
@@ -91,7 +92,7 @@ public class PlayerRepository {
         try {
             return dao.queryBuilder().where().gt("lastSeen", twoWeeksAgo).query();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query active players.", e);
             return new ArrayList<>();
         }
     }
@@ -100,7 +101,7 @@ public class PlayerRepository {
         try {
             return dao.queryForAll();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query all players.", e);
             return new ArrayList<>();
         }
     }

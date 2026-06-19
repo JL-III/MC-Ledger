@@ -49,7 +49,7 @@ public class Commands implements CommandExecutor {
                 if (nessId == null) {
                     OfflinePlayer ness = Bukkit.getOfflinePlayerIfCached("NessXXIII");
                     if (ness == null) {
-                        Ledger.getBukkitLogger().warning("Could not get Ness UUID. Try logging into the server for awhile.");
+                        Ledger.getCustomLogger().warning("Could not get Ness UUID. Try logging into the server for awhile.");
                         return;
                     } else {
                         nessId = ness.getUniqueId().toString();

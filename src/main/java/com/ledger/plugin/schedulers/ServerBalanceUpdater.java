@@ -120,11 +120,11 @@ public class ServerBalanceUpdater {
     }
 
     private void run() {
-        Ledger.getBukkitLogger().info("Ledger scheduler to update server balances has started...");
+        Ledger.getCustomLogger().info("Ledger scheduler to update server balances has started...");
         updateDailyBalances();
         updateWeeklyBalances();
         updateMonthlyBalances();
         updateAllTimeBalances();
-        Ledger.getBukkitLogger().info("Ledger scheduler successfully updated server balance.");
+        Ledger.getCustomLogger().info("Ledger scheduler successfully updated server balance.");
     }
 }

@@ -42,7 +42,7 @@ public class DataPurger {
     }
 
     public void run() {
-        Ledger.getBukkitLogger().info("Ledger data purger scheduler started...");
+        Ledger.getCustomLogger().info("Ledger data purger scheduler started...");
 //        playerBalanceRepository.purge();
 //        serverBalanceRepository.purge();
 //
@@ -51,6 +51,6 @@ public class DataPurger {
 
         SessionService.purgeOldSessions();
         SessionService.purgeOldAuthorizations();
-        Ledger.getBukkitLogger().info("Ledger data purger ran successfully.");
+        Ledger.getCustomLogger().info("Ledger data purger ran successfully.");
     }
 }

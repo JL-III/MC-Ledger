@@ -1,6 +1,7 @@
 package com.ledger.api.database.repositories;
 
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.j256.ormlite.dao.Dao;
 import com.ledger.api.database.entities.HistoryType;
@@ -23,7 +24,7 @@ public class PlayerBalanceRepository {
         try {
             dao.create(histories);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create player balances.", e);
         }
     }
 
@@ -31,7 +32,7 @@ public class PlayerBalanceRepository {
         try {
             dao.createOrUpdate(pb);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to create or update player balance.", e);
         }
     }
 
@@ -51,7 +52,7 @@ public class PlayerBalanceRepository {
                     .ge("timestamp", timestamp).and()
                     .eq("playerId", playerId).query();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to query player balances.", e);
             return new ArrayList<>();
         }
     }
@@ -73,7 +74,7 @@ public class PlayerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge daily player balances.", e);
         }
     }
 
@@ -88,7 +89,7 @@ public class PlayerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge weekly player balances.", e);
         }
     }
 
@@ -103,7 +104,7 @@ public class PlayerBalanceRepository {
 
             dao.delete(balances);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Ledger.getCustomLogger().error("Failed to purge monthly player balances.", e);
         }
     }
 }
