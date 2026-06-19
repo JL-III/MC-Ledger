@@ -130,11 +130,11 @@ public class PlayerBalanceUpdater {
     }
 
     private void run() {
-        Ledger.getCustomLogger().info("Ledger scheduler to update player balances has started...");
+        Ledger.getCustomLogger().debug("Ledger scheduler to update player balances has started...");
         updateDailyBalances();
         updateWeeklyBalances();
         updateMonthlyBalances();
         updateAllTimeBalances();
-        Ledger.getCustomLogger().info("Ledger scheduler successfully updated player balances.");
+        Ledger.getCustomLogger().debug("Ledger scheduler successfully updated player balances.");
     }
 }

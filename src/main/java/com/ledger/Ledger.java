@@ -15,19 +15,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
-import java.util.logging.Logger;
 
 public class Ledger extends JavaPlugin {
     private static File dataFolder;
-    private static Logger logger;
     private static CustomLogger customLogger;
     private static FileConfiguration config;
 
     private HttpServer server = null;
 
     public Ledger() {
-        logger = getLogger();
-        customLogger = new CustomLogger(logger);
+        customLogger = new CustomLogger(getLogger());
         config = getConfig();
         dataFolder = getDataFolder();
     }
@@ -94,10 +91,6 @@ public class Ledger extends JavaPlugin {
 
     public static Configuration getConfiguration() {
         return config;
-    }
-
-    public static Logger getBukkitLogger() {
-        return logger;
     }
 
     public static CustomLogger getCustomLogger() {

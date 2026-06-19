@@ -59,7 +59,7 @@ public class Commands implements CommandExecutor {
                 String authId = SessionService.createAuthorization(nessId, "NessXXIII", PERMISSIONS);
                 String host = Ledger.getConfiguration().getString("server-url");
                 String url = "http://" + host + "/sessions/" + authId;
-                Ledger.getBukkitLogger().info("[Ledger Login URL]: " + url);
+                Ledger.getCustomLogger().info("[Ledger Login URL]: " + url);
             });
             return false;
         }
