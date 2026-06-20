@@ -1,16 +1,16 @@
 package com.ledger.api.database.repositories;
 
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.ledger.Ledger;
-import com.ledger.api.database.LedgerDB;
-import com.j256.ormlite.dao.Dao;
-import com.ledger.api.database.entities.HistoryType;
-import com.ledger.api.database.entities.PlayerBalance;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import com.j256.ormlite.dao.Dao;
+import com.ledger.Ledger;
+import com.ledger.api.database.LedgerDB;
+import com.ledger.api.database.entities.HistoryType;
+import com.ledger.api.database.entities.PlayerBalance;
 
 public class PlayerBalanceRepository {
     private final Dao<PlayerBalance, String> dao;
