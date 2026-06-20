@@ -4,6 +4,15 @@ import routes from "../routes";
 
 export const AuthContext = React.createContext({});
 
+// The first content route the session has permission for, used as the landing
+// page after a successful login. Mirrors the permission filter in NavItems.
+const firstAuthorizedPath = (session) => {
+  const route = routes.find((r) =>
+    r.permissions.some((permission) => session.permissions.includes(permission))
+  );
+  return route ? route.path : "/login";
+};
+
 const AuthProvider = ({ children }) => {
   const [session, setSession] = useState();
   const history = useHistory();
@@ -27,6 +36,11 @@ const AuthProvider = ({ children }) => {
     const data = await res.json();
     sessionStorage.setItem("session", JSON.stringify(data));
     setSession(data);
+
+    // The /sessions/{id} route only exists to exchange the login link for a
+    // session. Without redirecting, the user is left on that route, which
+    // renders the "login expired or invalid" page even though login succeeded.
+    history.push(firstAuthorizedPath(data));
   };
 
   const fetchWithAuth = async (url) => {
