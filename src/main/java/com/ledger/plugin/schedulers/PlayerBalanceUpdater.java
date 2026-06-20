@@ -2,14 +2,11 @@ package com.ledger.plugin.schedulers;
 
 import com.ledger.Ledger;
 import com.ledger.api.database.entities.HistoryType;
-import com.ledger.api.database.entities.Player;
 import com.ledger.api.database.entities.PlayerBalance;
 import com.ledger.api.database.repositories.PlayerBalanceRepository;
-import com.ledger.api.database.repositories.PlayerRepository;
 import com.ledger.api.database.repositories.SchedulerRepository;
 import com.ledger.api.database.repositories.TransactionRepository;
 import com.ledger.api.utils.TimeBucketRetriever;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;

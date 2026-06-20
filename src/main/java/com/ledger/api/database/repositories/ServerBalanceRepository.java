@@ -5,7 +5,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.ledger.Ledger;
 import com.ledger.api.database.LedgerDB;
 import com.ledger.api.database.entities.HistoryType;
-import com.ledger.api.database.entities.PlayerBalance;
 import com.ledger.api.database.entities.ServerBalance;
 import java.sql.SQLException;
 import java.util.ArrayList;
